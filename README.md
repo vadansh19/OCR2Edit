@@ -1,47 +1,47 @@
-“Let’s Texify”
-OCR Application Requirements 
-•	An application which is able to read text from an image. Image can be any size, color and font family.
-Required Projects.
-•	UI Application
-o	Image Acquisition
-	UI application will be able to read image/Images from the Select Folder Button that pops up in the UI.
-	It should also be able to move image signally and also continuously as per specified time delay.
- 
+# Let’s Texify
 
-o	Recipe Save, Retrieve, show, update and delete
-	There should be a feature where we will be able to save all the parameters of a batch. EX.  If I have the image of newspapers & also a book page. Then preprocessing parameters will be different from each other. If we won’t do it then every time we need to change all the parameters.
-o	Teaching Process
-	There should be a ROI on a panel that is movable.
-	We should be able to crop the Image according to the ROI when teach or get data button pressed.
-	On clicking on teach data all the parameters that we have decided will be sent to our DLL which will process it further and return a string as an output.
-	Then need to call Post processing API that will do the further operation.
- 
+## Project Description
 
-	There should be a save button that saves the recipe.
-	There should also be a feature where we can save the data to any specific file location.
+“Let’s Texify” is an OCR (Optical Character Recognition) application capable of reading text from images of any size, color, and font family.
 
+## Application Requirements
 
-•	OCR DLL
-o	Preprocessing
-	As per the selected parameters received on the preprocessing function, preprocessing will be done accordingly. 
-o	Recognition
-	The preprocessed image will be sent to Tesseract.
-	It will return a string.
-o	Post Processing
-	The processed test will be sent to post processing function. 
-	It will return the final string.
+### UI Application
 
+#### Image Acquisition
+- The UI application allows reading images from a folder selected via the "Select Folder" button.
+- It supports both single image and continuous image acquisition based on a specified time delay.
 
-Roles and responsibilities
-•	Ajay
-o	Provide the DLL with Preprocessing and Tesseract.
-•	Jinoy
-o	Provide the DLL with Postprocessing.
-•	Vadansh
-o	Provide UI with all API calling.
+#### Recipe Management
+- Save, retrieve, show, update, and delete batch parameters.
+- Allows saving different preprocessing parameters for various types of images (e.g., newspapers vs. book pages) to avoid repetitive adjustments.
 
+#### Teaching Process
+- A movable ROI (Region of Interest) panel for image cropping.
+- Crop images based on the ROI when the "Teach" or "Get Data" button is pressed.
+- Parameters sent to a DLL for processing, returning a string output.
+- Call a post-processing API for further operations.
+- Save button to store recipes.
+- Option to save data to a specific file location.
 
+### OCR DLL
 
+#### Preprocessing
+- Preprocess images based on selected parameters.
 
- 
+#### Recognition
+- Send preprocessed images to Tesseract for text recognition, returning a string.
 
+#### Post Processing
+- Send processed text to a post-processing function, returning the final string.
+
+## Roles and Responsibilities
+
+- **Ajay**
+  - Provide the DLL with Preprocessing and Tesseract integration.
+  
+- **Jinoy**
+  - Provide the DLL with Postprocessing functionality.
+  
+- **Vadansh**
+  - Develop the UI and integrate all API calls.
