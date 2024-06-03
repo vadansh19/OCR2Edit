@@ -37,11 +37,7 @@
 
 ## Roles and Responsibilities
 
-- **Ajay**
-  - Provide the DLL with Preprocessing and Tesseract integration.
-  
-- **Jinoy**
-  - Provide the DLL with Postprocessing functionality.
-  
 - **Vadansh**
+  - Provide the DLL with Preprocessing and Tesseract integration.
   - Develop the UI and integrate all API calls.
+  - Provide the DLL with Postprocessing functionality.
