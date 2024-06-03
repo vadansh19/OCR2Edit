@@ -40,7 +40,7 @@
             this.btnChooseFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(89)))), ((int)(((byte)(133)))));
             this.btnChooseFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnChooseFile.ForeColor = System.Drawing.Color.White;
-            this.btnChooseFile.Location = new System.Drawing.Point(832, 190);
+            this.btnChooseFile.Location = new System.Drawing.Point(850, 190);
             this.btnChooseFile.Margin = new System.Windows.Forms.Padding(4);
             this.btnChooseFile.Name = "btnChooseFile";
             this.btnChooseFile.Size = new System.Drawing.Size(189, 74);
@@ -54,7 +54,7 @@
             this.btnGenerateResult.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(89)))), ((int)(((byte)(133)))));
             this.btnGenerateResult.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGenerateResult.ForeColor = System.Drawing.Color.White;
-            this.btnGenerateResult.Location = new System.Drawing.Point(832, 299);
+            this.btnGenerateResult.Location = new System.Drawing.Point(850, 317);
             this.btnGenerateResult.Margin = new System.Windows.Forms.Padding(4);
             this.btnGenerateResult.Name = "btnGenerateResult";
             this.btnGenerateResult.Size = new System.Drawing.Size(189, 74);
@@ -65,7 +65,7 @@
             // 
             // txtQRCodeResult
             // 
-            this.txtQRCodeResult.Location = new System.Drawing.Point(756, 412);
+            this.txtQRCodeResult.Location = new System.Drawing.Point(771, 446);
             this.txtQRCodeResult.Multiline = true;
             this.txtQRCodeResult.Name = "txtQRCodeResult";
             this.txtQRCodeResult.Size = new System.Drawing.Size(335, 124);
@@ -73,11 +73,12 @@
             // 
             // pbQRCodeImage
             // 
-            this.pbQRCodeImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pbQRCodeImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pbQRCodeImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbQRCodeImage.Location = new System.Drawing.Point(78, 78);
+            this.pbQRCodeImage.Location = new System.Drawing.Point(12, 39);
             this.pbQRCodeImage.Name = "pbQRCodeImage";
-            this.pbQRCodeImage.Size = new System.Drawing.Size(646, 458);
+            this.pbQRCodeImage.Size = new System.Drawing.Size(742, 531);
+            this.pbQRCodeImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbQRCodeImage.TabIndex = 10;
             this.pbQRCodeImage.TabStop = false;
             // 

@@ -14,8 +14,8 @@ namespace LetsTextify
         String[] Offline_Image_Path_1;
         Boolean Single_Trigger_On_1;  
         String Image_Path_1;
-        int index_1_image;
-        int Total_index_1_image;
+        public int index_1_image;
+        public int Total_index_1_image;
         public Offline_Simulator()
         {
             InitializeComponent();

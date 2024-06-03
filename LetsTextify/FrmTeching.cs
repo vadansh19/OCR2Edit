@@ -9,10 +9,19 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NHunspell;
 using OCRProcessing;
 using Org.BouncyCastle.Crypto.Engines;
+using sun.security.util;
+using sun.security.x509;
+using sun.swing;
+using Xceed.Document.NET;
+using Xceed.Words.NET;
+using static javax.jws.soap.SOAPBinding;
+using Word = Microsoft.Office.Interop.Word;
 
 namespace LetsTextify
 {
@@ -22,6 +31,9 @@ namespace LetsTextify
         public static string Offline_Simulator_Image_Path_1_CB = "";
         Offline_Simulator Offline_simulator;
         Rectangle g_ROI_Rect;
+        Bitmap org = null;
+        Bitmap preproc = null;
+        bool IsCompareOCR = false;
 
         int Tp_pct_Width = 586;
         int Tp_pct_Height = 383;
@@ -51,6 +63,10 @@ namespace LetsTextify
         float LocationX;
         float LocationY;
 
+        //Save to Word
+
+        Word.Document wordDoc;
+        Word.Application wordApp;
         public string getOCRResult()
         {
             OCRProc objOcr = new OCRProc();
@@ -64,17 +80,100 @@ namespace LetsTextify
                 clsGlobalDefinations.objstructRecipeParams.CharMaxHeight, clsGlobalDefinations.objstructRecipeParams.IsWhiteOnBlack);
             string strWhiteList = getWhiteListAplhabets(cmbDataTypes.SelectedItem.ToString());
 
-            return objOcr.ImageToText("1.bmp", clsGlobalDefinations.objstructRecipeParams.PSMValue,
+                string Result = objOcr.ImageToText("1.bmp", clsGlobalDefinations.objstructRecipeParams.PSMValue,
                 clsGlobalDefinations.objstructRecipeParams.OEMValue, clsGlobalDefinations.objstructRecipeParams.TrainFile, 
                 strWhiteList);
+
+            if(clsGlobalDefinations.isPreviewStarted)
+                txtPostProcessPreview.Text = getPreProcessedData(Result);
+            else
+                txtResultPostProcessed.Text = getPreProcessedData(Result);
+
+            if (IsCompareOCR)
+            {
+                string orgResult = objOcr.ImageToText("tmp.bmp", clsGlobalDefinations.objstructRecipeParams.PSMValue,
+               clsGlobalDefinations.objstructRecipeParams.OEMValue, clsGlobalDefinations.objstructRecipeParams.TrainFile,
+               strWhiteList);
+
+               
+                OriginalPicture.BackgroundImage = null;
+                PreProcessedImage.BackgroundImage = null;
+                if (org != null && org.Width > 0 && org.Height > 0)
+                    org.Dispose();
+                if (preproc != null && preproc.Width > 0 && preproc.Height > 0)
+                    preproc.Dispose();
+                if (File.Exists("org.bmp"))
+                    File.Delete("org.bmp");
+                if (File.Exists("imgproc.bmp"))
+                    File.Delete("imgproc.bmp");
+                File.Copy("tmp.bmp", "org.bmp");
+                File.Copy("1.bmp", "imgproc.bmp");
+
+                byte[] imageData = File.ReadAllBytes("org.bmp");
+                byte[] imageData2 = File.ReadAllBytes("imgproc.bmp");
+                using (MemoryStream memoryStream = new MemoryStream(imageData))
+                {
+                    org = new Bitmap(memoryStream);
+                }
+                using (MemoryStream memoryStream = new MemoryStream(imageData2))
+                {
+                    preproc = new Bitmap(memoryStream);
+                }
+
+                OriginalPicture.BackgroundImage = org;
+                PreProcessedImage.BackgroundImage = preproc;
+                
+                OriginalImgText.Text = orgResult;
+                PreprocessedImgText.Text = Result;
+            }
+
+            return Result;
         }
+        public void CreateWordDocument()
+        {
+            // Create a new Word application
+            wordApp = new Word.Application();
+
+            // Create a new document
+            wordDoc = wordApp.Documents.Add();
+
+            //AddPage(wordDoc, "Page 1 Content");
+        }
+        public void SaveWordDocument(string filepath)
+        {
+            wordDoc.SaveAs2(filepath);
+            wordDoc.Close();
+            wordApp.Quit();
+        }
+
+        private void AddPage(Word.Document document, string content)
+        {
+            // Create a new page
+            Word.Paragraph paragraph = document.Content.Paragraphs.Add();
+
+            // Add the content to the page
+            paragraph.Range.Text = content;
+
+            // Add a page break after the content
+            paragraph.Range.InsertParagraphAfter();
+            paragraph.Range.InsertBreak(Word.WdBreakType.wdPageBreak);
+        }
+
         private void btnGetData_Click(object sender, EventArgs e)
         {
-            SaveDataToStructure();
-            g_ROI_Rect = getROIRact(M_Rect);
+            if(Offline_Simulator_Image_Path_1_CB!=string.Empty)
+            {
+                btnStartPreview.Enabled = true;
+                SaveDataToStructure();
+                g_ROI_Rect = getROIRact(M_Rect);
 
-            txtResult.Text = getOCRResult();
-            btnSaveRecipeTeach.Enabled = true;
+                txtResult.Text = getOCRResult();
+                btnSaveRecipeTeach.Enabled = true;
+            }
+            else
+            {
+                    MessageBox.Show("Please choose Image first.", "Let's Textify", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         public Rectangle getROIRact(Rectangle M_Rect)
@@ -104,7 +203,7 @@ namespace LetsTextify
             rectangle.Width = (int)((double)M_Rect.Width / (double)factor_x);
             rectangle.Height = (int)((double)M_Rect.Height / (double)factor_y);
 
-            clsGlobalDefinations.objstructRecipeParams.ROI_Rect = rectangle;
+            clsGlobalDefinations.objstructRecipeParams.ROI_Rect = M_Rect;
 
             //PreProcess Params
             clsGlobalDefinations.objstructRecipeParams.TrainFile = cmbTrainFile.SelectedItem.ToString();
@@ -162,10 +261,11 @@ namespace LetsTextify
 
         private void btnCompareOCR_Click(object sender, EventArgs e)
         {
-            pnlTeaching.Visible = false;
+            pnlPreview.Visible = false;
             pnlCompareOCR.Visible = true;
             pnlCompareOCR.BringToFront();
             clsGlobalDefinations.stCurrentScreenName = "CompareOCR";
+            IsCompareOCR = true;
         }
 
         private void btnCancelRecipeCreate_Click(object sender, EventArgs e)
@@ -194,16 +294,21 @@ namespace LetsTextify
             pnlTeaching.Visible = false;
             pnlRecipe.Visible = true;
             pnlRecipe.BringToFront();
+            unloadOfflineSimulator();
             loadProductFromDB();
+            clsGlobalDefinations.RecipeCreateOrEditStarted = false;
         }
 
         private void btnStartPreview_Click(object sender, EventArgs e)
         {
-            clsGlobalDefinations.stCurrentScreenName = "Preview";
+            // Offline_simulator.index_1_image = 0;
+            Offline_simulator.btn_Reset_trigger_1_OS.PerformClick();
+             clsGlobalDefinations.stCurrentScreenName = "Preview";
             pnlTeaching.Visible = false;
             pnlPreview.Visible = true;
             pnlPreview.BringToFront();
             clsGlobalDefinations.isPreviewStarted = true;
+            CreateWordDocument();
         }
 
         private void Edit_Click(object sender, EventArgs e)
@@ -216,6 +321,7 @@ namespace LetsTextify
             pnlTeaching.BringToFront();
             DataRow dr = loadSingleFromDB(clsGlobalDefinations.iArrRecipeIdList[dgvRecipeList.SelectedRows[0].Index]);
             loadParamToForm(dr);
+            clsGlobalDefinations.RecipeCreateOrEditStarted = true;
         }
 
         private void loadParamToForm(DataRow dr)
@@ -283,20 +389,50 @@ namespace LetsTextify
             pnlTeaching.Visible = true;
             pnlTeaching.BringToFront();
             clsGlobalDefinations.isPreviewStarted = false;
+            File.Delete(AppDomain.CurrentDomain.BaseDirectory + "\\PreviewData.Docx");
+            SaveWordDocument(AppDomain.CurrentDomain.BaseDirectory+"\\PreviewData.Docx");
         }
-
         private void btnCreateRecipe_Click(object sender, EventArgs e)
         {
-            clsGlobalDefinations.stCurrentScreenName = "Teach Recipe";
-            pnlRecipeNamePopUp.Visible = false;
+            if (txtRecipeName.Text != String.Empty)
+            {
+                if (checkDuplicateRecipeName(txtRecipeName.Text))
+                {
+                    clsGlobalDefinations.stCurrentScreenName = "Teach Recipe";
+                    pnlRecipeNamePopUp.Visible = false;
 
-            pnlRecipe.Visible = false;
-            pnlTeaching.Visible = true;
-            pnlTeaching.BringToFront();
-            clsGlobalDefinations.objstructRecipeParams.RecipeName = txtRecipeName.Text;
-            txtRecipeName.Text = string.Empty;
-            clsGlobalDefinations.isEditRecipe = false;
-            loadOfflineSimulator();
+                    pnlRecipe.Visible = false;
+                    pnlTeaching.Visible = true;
+                    pnlTeaching.BringToFront();
+                    clsGlobalDefinations.objstructRecipeParams.RecipeName = txtRecipeName.Text;
+                    txtRecipeName.Text = string.Empty;
+                    clsGlobalDefinations.isEditRecipe = false;
+                    loadOfflineSimulator();
+                    clsGlobalDefinations.RecipeCreateOrEditStarted = true;
+                }
+                else
+                {
+                    MessageBox.Show("Recipe alredy exists.", "Let's Textify", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Recipe Name can not be blank.", "Let's Textify", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private bool checkDuplicateRecipeName(string text)
+        {
+            bool result = true;
+            for (int i = 0; i < clsGlobalDefinations.strArrRecipeNameList.Length; i++)
+            {
+                if(clsGlobalDefinations.strArrRecipeNameList[i] == text)
+                {
+                    result = false;
+                    break;
+                }
+            }
+            return result;
         }
 
         private void pnl_cam_1_create_receipe_MouseClick(object sender, MouseEventArgs e)
@@ -365,8 +501,10 @@ namespace LetsTextify
         private void closeCompareOCR_Click(object sender, EventArgs e)
         {
             pnlCompareOCR.Visible = false;
-            pnlTeaching.Visible = true;
-            pnlTeaching.BringToFront();
+            pnlPreview.Visible = true;
+            pnlPreview.BringToFront();
+
+            IsCompareOCR = false;
         }
 
         private void pnl_cam_1_create_receipe_MouseMove(object sender, MouseEventArgs e)
@@ -693,6 +831,17 @@ namespace LetsTextify
                 clsGlobalDefinations.IsOfflineSimOpen = true;
             }
         }
+
+        public void unloadOfflineSimulator()
+        {
+            if (clsGlobalDefinations.IsOfflineSimOpen)
+            {
+                clsGlobalDefinations.IsOfflineSimOpen = false;
+                Offline_simulator.Visible = false;
+                Offline_simulator.SendToBack();
+                Offline_simulator.Dispose();                
+            }
+        }
         public DataRow loadSingleFromDB(int RecipeId)
         {
             clsGlobalDefinations.OpenConnection();
@@ -708,10 +857,12 @@ namespace LetsTextify
             clsGlobalDefinations.OpenConnection();
             DataSet ds = clsGlobalDefinations.getRecipeData();
             clsGlobalDefinations.iArrRecipeIdList = new int[ds.Tables[0].Rows.Count];
+            clsGlobalDefinations.strArrRecipeNameList = new string[ds.Tables[0].Rows.Count];
             for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
             {
                 dgvRecipeList.Rows.Add(++clsGlobalDefinations.iRecipeSRnoCount, ds.Tables[0].Rows[i]["RecipeName"].ToString(),ds.Tables[0].Rows[i]["UpdatedDate"].ToString());
                 clsGlobalDefinations.iArrRecipeIdList[i] = Convert.ToInt32(ds.Tables[0].Rows[i]["RecipeId"]);
+                clsGlobalDefinations.strArrRecipeNameList[i] = ds.Tables[0].Rows[i]["RecipeName"].ToString();
             }
             if (ds.Tables[0].Rows.Count > 0)
             {
@@ -727,11 +878,21 @@ namespace LetsTextify
             if (IS_Grab_offline_1_CB )
             {
                 IS_Grab_offline_1_CB = false;
-                Bitmap b = (Bitmap)Image.FromFile(Offline_Simulator_Image_Path_1_CB).Clone();
+                Bitmap b = (Bitmap)System.Drawing.Image.FromFile(Offline_Simulator_Image_Path_1_CB).Clone();
                 if (clsGlobalDefinations.isPreviewStarted)
                 {
+                    if (Offline_simulator.index_1_image+1 == Offline_simulator.Total_index_1_image)
+                    {
+                        unloadOfflineSimulator();
+                        btnStopPreview.PerformClick();
+                        btnSaveRecipeTeach.PerformClick();
+                        MessageBox.Show("Preview Autocompleted and saved recipe automatically!", "Let's Textify", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+
                     pbPreviewImage.Image = b;
                     txtPreviewResult.Text = getOCRResult();
+                    AddPage(wordDoc, txtPreviewResult.Text);
                 }
                 else
                 {
@@ -971,7 +1132,7 @@ namespace LetsTextify
             }
             else if (DataType == "ASCII")
             {
-                return " \nABCDEFGHIJKLMNOPQRSTUVWXYZ.abcdefghijklmnopqrstuvwxyz~`!@#$%^&*()_+-={[]};:'\",/?|\\";
+                return " ABCDEFGHIJKLMNOPQRSTUVWXYZ.abcdefghijklmnopqrstuvwxyz~`!@#$%^&*()_+-={[]};:'\",/?|\\ \n";
             }
             else if (DataType == "Custom")
             {
@@ -981,6 +1142,68 @@ namespace LetsTextify
             {
                 return " \nABCDEFGHIJKLMNOPQRSTUVWXYZ.abcdefghijklmnopqrstuvwxyz~`!@#$%^&*()_+-={[]};:'\",/?|\\";
             }
+
+        }
+        public string getPreProcessedData(string OldResult)
+        {
+            string recognizedText = OldResult;
+
+            // Remove non-alphanumeric characters and leading/trailing whitespaces
+            recognizedText = Regex.Replace(recognizedText, "[^a-zA-Z0-9]", "");
+            recognizedText = recognizedText.Trim();
+
+            // Spell checking (using NHunspell)
+            using (Hunspell hunspell = new Hunspell("en_us.aff", "en_us.dic"))
+            {
+                string[] words = recognizedText.Split(' ');
+                for (int i = 0; i < words.Length; i++)
+                {
+                    if (!hunspell.Spell(words[i]))
+                    {
+                        List<string> suggestions = hunspell.Suggest(words[i]);
+                        if (suggestions.Count > 0)
+                        {
+                            words[i] = suggestions[0]; // Replace with the first suggested word
+                        }
+                    }
+                }
+                recognizedText = string.Join(" ", words);
+                return recognizedText;//AddPunctuation(recognizedText);
+            }
+        }
+        public string AddPunctuation(string str)
+        {
+            // Input string
+            var input = "This is a sentence without punctuation";
+
+            // Specify the punctuation marks you want to add
+            var punctuationMarks = new[] { ".", ",", "!" };
+
+            // Split the input string into words
+            var words = input.Split(' ');
+
+            // Process each word and add punctuation
+            var processedWords = new List<string>();
+            foreach (var word in words)
+            {
+                var modifiedWord = word;
+
+                // Add punctuation to the modified word
+                foreach (var punctuation in punctuationMarks)
+                {
+                    var modifiedWordWithPunctuation = word + punctuation;
+                    if (!string.Equals(modifiedWordWithPunctuation, word, StringComparison.OrdinalIgnoreCase))
+                    {
+                        modifiedWord = modifiedWordWithPunctuation;
+                        break;
+                    }
+                }
+
+                processedWords.Add(modifiedWord);
+            }
+
+            // Reconstruct the string with added punctuation
+            return string.Join(" ", processedWords);
 
         }
     }

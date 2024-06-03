@@ -27,6 +27,7 @@ namespace OCRProcessing
             int iRetValue = 0;
 
             Bitmap b = cropImage((Bitmap)Image.FromFile(strImagePath), rect);
+            
             b.Save("tmp.bmp");
             Mat lImg = CvInvoke.Imread("tmp.bmp", LoadImageType.Grayscale);
             Mat lOutImage = CvInvoke.Imread(strImagePath, LoadImageType.Grayscale);

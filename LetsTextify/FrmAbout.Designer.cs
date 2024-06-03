@@ -58,6 +58,7 @@
             // lblAbout
             // 
             this.lblAbout.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAbout.ForeColor = System.Drawing.Color.Black;
             this.lblAbout.Location = new System.Drawing.Point(12, 11);
             this.lblAbout.Name = "lblAbout";
             this.lblAbout.Size = new System.Drawing.Size(933, 368);

@@ -50,11 +50,13 @@ namespace LetsTextify
         public static int iRecipeSRnoCount = 0;
         public static bool isEditRecipe = false;
         public static int []iArrRecipeIdList;
+        public static string [] strArrRecipeNameList;
 
         public static bool isPreviewStarted = false;
         public static bool IsOfflineSimOpen = false;
         public static string stCurrentScreenName = "Dashboard";
 
+        public static bool RecipeCreateOrEditStarted = false;
         public static void OpenConnection()
         {
         
@@ -195,8 +197,8 @@ namespace LetsTextify
                         }
                     }
                    
-                    objDbCommand.ExecuteNonQuery();
-                   
+                    int i = objDbCommand.ExecuteNonQuery();// MessageBox.Show(i.ToString());
+
             }
             catch (Exception ex)
             {

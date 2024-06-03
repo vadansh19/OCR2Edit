@@ -18,6 +18,8 @@ using org.apache.pdfbox.util;
 //using Novacode;
 using System.Diagnostics;
 using Xceed.Words.NET;
+using Path = System.IO.Path;
+using sun.swing;
 
 namespace LetsTextify
 {
@@ -28,10 +30,22 @@ namespace LetsTextify
             InitializeComponent();
         }
 
+        string fileName = "tmp";
         private void btnChooseFile_Click(object sender, EventArgs e)
         {
-          //  convertPDFToWord();
-            ConvertPdfToWord(@"C:\Users\AjayPandya\Desktop\clg Presentation\LetsTextifyFinal.pdf", @"C:\Users\AjayPandya\Desktop\clg Presentation\LetsTextify.doc");
+            //  convertPDFToWord();
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "PDF Files (*.pdf)|*.pdf";
+            openFileDialog.Title = "Select a PDF File";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string selectedFilePath = openFileDialog.FileName;
+                fileName = Path.GetFileName(selectedFilePath).Split('.')[0];
+                fileName+= "_converted.doc";
+                ConvertPdfToWord(selectedFilePath, fileName);
+            }
         }
 
         public void ConvertPdfToWord(string inputPdfPath, string outputWordPath)
@@ -119,6 +133,32 @@ namespace LetsTextify
         private void FrmPDFToWord_Load(object sender, EventArgs e)
         {
             clsGlobalDefinations.stCurrentScreenName = "PDFToWord";
+        }
+
+        private void btnDownloadFile_Click(object sender, EventArgs e)
+        {
+            using (var folderBrowserDialog = new FolderBrowserDialog())
+            {
+                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string selectedFolderPath = folderBrowserDialog.SelectedPath;
+                    string filePath = fileName; // Replace with the actual file path
+
+                    try
+                    {
+                        string fileName = Path.GetFileName(filePath);
+                        string destinationPath = Path.Combine(selectedFolderPath, fileName);
+                        File.Copy(filePath, destinationPath);
+
+                        MessageBox.Show($"File saved successfully to '{destinationPath}'.");
+                        File.Delete(fileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"An error occurred while saving the file:\n{ex.Message}");
+                    }
+                }
+            }
         }
     }
 }

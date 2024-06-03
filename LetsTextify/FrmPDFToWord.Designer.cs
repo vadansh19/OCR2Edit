@@ -56,8 +56,9 @@
             this.btnDownloadFile.Name = "btnDownloadFile";
             this.btnDownloadFile.Size = new System.Drawing.Size(229, 101);
             this.btnDownloadFile.TabIndex = 8;
-            this.btnDownloadFile.Text = "Download File";
+            this.btnDownloadFile.Text = "Save File";
             this.btnDownloadFile.UseVisualStyleBackColor = false;
+            this.btnDownloadFile.Click += new System.EventHandler(this.btnDownloadFile_Click);
             // 
             // FrmPDFToWord
             // 

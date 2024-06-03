@@ -167,7 +167,7 @@
             this.btnImageToText.Name = "btnImageToText";
             this.btnImageToText.Size = new System.Drawing.Size(223, 75);
             this.btnImageToText.TabIndex = 0;
-            this.btnImageToText.Text = "ImageToText";
+            this.btnImageToText.Text = "Image To Text";
             this.btnImageToText.UseVisualStyleBackColor = false;
             this.btnImageToText.Click += new System.EventHandler(this.btnImageToText_Click);
             // 

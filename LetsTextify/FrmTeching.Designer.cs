@@ -34,7 +34,6 @@ namespace LetsTextify
             this.pnlTeaching = new System.Windows.Forms.Panel();
             this.Panel141 = new System.Windows.Forms.Panel();
             this.pnl_cam_1_create_receipe = new System.Windows.Forms.PictureBox();
-            this.btnCompareOCR = new System.Windows.Forms.Button();
             this.btnZoomPlus = new System.Windows.Forms.Button();
             this.btnZoomMinus = new System.Windows.Forms.Button();
             this.trkZoomLevel = new System.Windows.Forms.TrackBar();
@@ -89,13 +88,14 @@ namespace LetsTextify
             this.dgvRecipeListSrNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvRecipeListRecipeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvRecipeListLastModifiedOn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Recipe = new System.Windows.Forms.Label();
             this.Delete = new System.Windows.Forms.Button();
             this.Edit = new System.Windows.Forms.Button();
             this.Create = new System.Windows.Forms.Button();
             this.pnlPreview = new System.Windows.Forms.Panel();
+            this.IsSavePostProcessedData = new System.Windows.Forms.CheckBox();
+            this.txtPostProcessPreview = new System.Windows.Forms.TextBox();
+            this.btnCompareOCR = new System.Windows.Forms.Button();
             this.txtPreviewResult = new System.Windows.Forms.TextBox();
-            this.btnSaveRecipePreview = new System.Windows.Forms.Button();
             this.btnStopPreview = new System.Windows.Forms.Button();
             this.pbPreviewImage = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -126,7 +126,6 @@ namespace LetsTextify
             // pnlTeaching
             // 
             this.pnlTeaching.Controls.Add(this.Panel141);
-            this.pnlTeaching.Controls.Add(this.btnCompareOCR);
             this.pnlTeaching.Controls.Add(this.btnZoomPlus);
             this.pnlTeaching.Controls.Add(this.btnZoomMinus);
             this.pnlTeaching.Controls.Add(this.trkZoomLevel);
@@ -168,21 +167,6 @@ namespace LetsTextify
             this.pnl_cam_1_create_receipe.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnl_cam_1_create_receipe_MouseDown);
             this.pnl_cam_1_create_receipe.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnl_cam_1_create_receipe_MouseMove);
             this.pnl_cam_1_create_receipe.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnl_cam_1_create_receipe_MouseUp);
-            // 
-            // btnCompareOCR
-            // 
-            this.btnCompareOCR.AutoSize = true;
-            this.btnCompareOCR.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(89)))), ((int)(((byte)(133)))));
-            this.btnCompareOCR.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.btnCompareOCR.ForeColor = System.Drawing.Color.White;
-            this.btnCompareOCR.Location = new System.Drawing.Point(482, 586);
-            this.btnCompareOCR.Margin = new System.Windows.Forms.Padding(4);
-            this.btnCompareOCR.Name = "btnCompareOCR";
-            this.btnCompareOCR.Size = new System.Drawing.Size(140, 37);
-            this.btnCompareOCR.TabIndex = 242;
-            this.btnCompareOCR.Text = "Compare OCR";
-            this.btnCompareOCR.UseVisualStyleBackColor = false;
-            this.btnCompareOCR.Click += new System.EventHandler(this.btnCompareOCR_Click);
             // 
             // btnZoomPlus
             // 
@@ -231,6 +215,7 @@ namespace LetsTextify
             // btnStartPreview
             // 
             this.btnStartPreview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(89)))), ((int)(((byte)(133)))));
+            this.btnStartPreview.Enabled = false;
             this.btnStartPreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStartPreview.ForeColor = System.Drawing.Color.White;
             this.btnStartPreview.Location = new System.Drawing.Point(645, 586);
@@ -257,9 +242,9 @@ namespace LetsTextify
             // 
             // grp_preprocessing_OCR_CR_OP
             // 
-            this.grp_preprocessing_OCR_CR_OP.Controls.Add(this.txtResultPostProcessed);
-            this.grp_preprocessing_OCR_CR_OP.Controls.Add(this.groupBox1);
             this.grp_preprocessing_OCR_CR_OP.Controls.Add(this.txtResult);
+            this.grp_preprocessing_OCR_CR_OP.Controls.Add(this.groupBox1);
+            this.grp_preprocessing_OCR_CR_OP.Controls.Add(this.txtResultPostProcessed);
             this.grp_preprocessing_OCR_CR_OP.Location = new System.Drawing.Point(797, 9);
             this.grp_preprocessing_OCR_CR_OP.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.grp_preprocessing_OCR_CR_OP.Name = "grp_preprocessing_OCR_CR_OP";
@@ -280,6 +265,7 @@ namespace LetsTextify
             this.txtResultPostProcessed.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtResultPostProcessed.Size = new System.Drawing.Size(319, 82);
             this.txtResultPostProcessed.TabIndex = 109;
+            this.txtResultPostProcessed.Visible = false;
             // 
             // groupBox1
             // 
@@ -814,7 +800,7 @@ namespace LetsTextify
             this.txtResult.Name = "txtResult";
             this.txtResult.ReadOnly = true;
             this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtResult.Size = new System.Drawing.Size(319, 82);
+            this.txtResult.Size = new System.Drawing.Size(319, 168);
             this.txtResult.TabIndex = 108;
             // 
             // tmr_offline_Capture
@@ -826,7 +812,6 @@ namespace LetsTextify
             // 
             this.pnlRecipe.Controls.Add(this.pnlRecipeNamePopUp);
             this.pnlRecipe.Controls.Add(this.dgvRecipeList);
-            this.pnlRecipe.Controls.Add(this.Recipe);
             this.pnlRecipe.Controls.Add(this.Delete);
             this.pnlRecipe.Controls.Add(this.Edit);
             this.pnlRecipe.Controls.Add(this.Create);
@@ -876,10 +861,9 @@ namespace LetsTextify
             // 
             // txtRecipeName
             // 
-            this.txtRecipeName.Location = new System.Drawing.Point(165, 36);
-            this.txtRecipeName.Multiline = true;
+            this.txtRecipeName.Location = new System.Drawing.Point(181, 52);
             this.txtRecipeName.Name = "txtRecipeName";
-            this.txtRecipeName.Size = new System.Drawing.Size(223, 49);
+            this.txtRecipeName.Size = new System.Drawing.Size(194, 22);
             this.txtRecipeName.TabIndex = 13;
             this.txtRecipeName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtRecipeName_KeyDown);
             // 
@@ -910,14 +894,14 @@ namespace LetsTextify
             this.dgvRecipeListSrNo,
             this.dgvRecipeListRecipeName,
             this.dgvRecipeListLastModifiedOn});
-            this.dgvRecipeList.Location = new System.Drawing.Point(19, 81);
+            this.dgvRecipeList.Location = new System.Drawing.Point(20, 59);
             this.dgvRecipeList.Margin = new System.Windows.Forms.Padding(4);
             this.dgvRecipeList.MultiSelect = false;
             this.dgvRecipeList.Name = "dgvRecipeList";
             this.dgvRecipeList.RowHeadersWidth = 51;
             this.dgvRecipeList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgvRecipeList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvRecipeList.Size = new System.Drawing.Size(893, 526);
+            this.dgvRecipeList.Size = new System.Drawing.Size(884, 526);
             this.dgvRecipeList.TabIndex = 5;
             // 
             // dgvRecipeListSrNo
@@ -930,7 +914,7 @@ namespace LetsTextify
             // 
             // dgvRecipeListRecipeName
             // 
-            this.dgvRecipeListRecipeName.HeaderText = "RecipeName";
+            this.dgvRecipeListRecipeName.HeaderText = "Recipe Name";
             this.dgvRecipeListRecipeName.MinimumWidth = 6;
             this.dgvRecipeListRecipeName.Name = "dgvRecipeListRecipeName";
             this.dgvRecipeListRecipeName.ReadOnly = true;
@@ -939,34 +923,22 @@ namespace LetsTextify
             // 
             // dgvRecipeListLastModifiedOn
             // 
-            this.dgvRecipeListLastModifiedOn.HeaderText = "LastModifiedOn";
+            this.dgvRecipeListLastModifiedOn.HeaderText = "Last Modified On";
             this.dgvRecipeListLastModifiedOn.MinimumWidth = 6;
             this.dgvRecipeListLastModifiedOn.Name = "dgvRecipeListLastModifiedOn";
             this.dgvRecipeListLastModifiedOn.ReadOnly = true;
             this.dgvRecipeListLastModifiedOn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvRecipeListLastModifiedOn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // Recipe
-            // 
-            this.Recipe.AutoSize = true;
-            this.Recipe.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Recipe.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(89)))), ((int)(((byte)(133)))));
-            this.Recipe.Location = new System.Drawing.Point(19, 33);
-            this.Recipe.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Recipe.Name = "Recipe";
-            this.Recipe.Size = new System.Drawing.Size(209, 25);
-            this.Recipe.TabIndex = 9;
-            this.Recipe.Text = "Recipe Management";
-            // 
             // Delete
             // 
             this.Delete.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(89)))), ((int)(((byte)(133)))));
             this.Delete.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Delete.ForeColor = System.Drawing.Color.White;
-            this.Delete.Location = new System.Drawing.Point(932, 311);
+            this.Delete.Location = new System.Drawing.Point(923, 320);
             this.Delete.Margin = new System.Windows.Forms.Padding(4);
             this.Delete.Name = "Delete";
-            this.Delete.Size = new System.Drawing.Size(195, 73);
+            this.Delete.Size = new System.Drawing.Size(187, 85);
             this.Delete.TabIndex = 8;
             this.Delete.Text = "Delete";
             this.Delete.UseVisualStyleBackColor = false;
@@ -977,10 +949,10 @@ namespace LetsTextify
             this.Edit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(89)))), ((int)(((byte)(133)))));
             this.Edit.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Edit.ForeColor = System.Drawing.Color.White;
-            this.Edit.Location = new System.Drawing.Point(932, 201);
+            this.Edit.Location = new System.Drawing.Point(921, 193);
             this.Edit.Margin = new System.Windows.Forms.Padding(4);
             this.Edit.Name = "Edit";
-            this.Edit.Size = new System.Drawing.Size(195, 73);
+            this.Edit.Size = new System.Drawing.Size(187, 87);
             this.Edit.TabIndex = 7;
             this.Edit.Text = "Edit";
             this.Edit.UseVisualStyleBackColor = false;
@@ -991,10 +963,10 @@ namespace LetsTextify
             this.Create.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(89)))), ((int)(((byte)(133)))));
             this.Create.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Create.ForeColor = System.Drawing.Color.White;
-            this.Create.Location = new System.Drawing.Point(932, 90);
+            this.Create.Location = new System.Drawing.Point(923, 63);
             this.Create.Margin = new System.Windows.Forms.Padding(4);
             this.Create.Name = "Create";
-            this.Create.Size = new System.Drawing.Size(195, 73);
+            this.Create.Size = new System.Drawing.Size(187, 95);
             this.Create.TabIndex = 6;
             this.Create.Text = "Create";
             this.Create.UseVisualStyleBackColor = false;
@@ -1002,49 +974,77 @@ namespace LetsTextify
             // 
             // pnlPreview
             // 
+            this.pnlPreview.Controls.Add(this.IsSavePostProcessedData);
+            this.pnlPreview.Controls.Add(this.btnCompareOCR);
             this.pnlPreview.Controls.Add(this.txtPreviewResult);
-            this.pnlPreview.Controls.Add(this.btnSaveRecipePreview);
             this.pnlPreview.Controls.Add(this.btnStopPreview);
             this.pnlPreview.Controls.Add(this.pbPreviewImage);
+            this.pnlPreview.Controls.Add(this.txtPostProcessPreview);
             this.pnlPreview.Location = new System.Drawing.Point(0, 0);
             this.pnlPreview.Name = "pnlPreview";
             this.pnlPreview.Size = new System.Drawing.Size(1157, 640);
             this.pnlPreview.TabIndex = 236;
             this.pnlPreview.Visible = false;
             // 
+            // IsSavePostProcessedData
+            // 
+            this.IsSavePostProcessedData.AutoSize = true;
+            this.IsSavePostProcessedData.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold);
+            this.IsSavePostProcessedData.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(89)))), ((int)(((byte)(133)))));
+            this.IsSavePostProcessedData.Location = new System.Drawing.Point(576, 594);
+            this.IsSavePostProcessedData.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.IsSavePostProcessedData.Name = "IsSavePostProcessedData";
+            this.IsSavePostProcessedData.Size = new System.Drawing.Size(239, 24);
+            this.IsSavePostProcessedData.TabIndex = 245;
+            this.IsSavePostProcessedData.Text = "SavePostProcessedData";
+            this.IsSavePostProcessedData.UseVisualStyleBackColor = true;
+            this.IsSavePostProcessedData.Visible = false;
+            // 
+            // txtPostProcessPreview
+            // 
+            this.txtPostProcessPreview.Location = new System.Drawing.Point(872, 288);
+            this.txtPostProcessPreview.Margin = new System.Windows.Forms.Padding(4);
+            this.txtPostProcessPreview.Multiline = true;
+            this.txtPostProcessPreview.Name = "txtPostProcessPreview";
+            this.txtPostProcessPreview.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtPostProcessPreview.Size = new System.Drawing.Size(247, 162);
+            this.txtPostProcessPreview.TabIndex = 244;
+            this.txtPostProcessPreview.Visible = false;
+            // 
+            // btnCompareOCR
+            // 
+            this.btnCompareOCR.AutoSize = true;
+            this.btnCompareOCR.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(89)))), ((int)(((byte)(133)))));
+            this.btnCompareOCR.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.btnCompareOCR.ForeColor = System.Drawing.Color.White;
+            this.btnCompareOCR.Location = new System.Drawing.Point(858, 476);
+            this.btnCompareOCR.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCompareOCR.Name = "btnCompareOCR";
+            this.btnCompareOCR.Size = new System.Drawing.Size(261, 45);
+            this.btnCompareOCR.TabIndex = 243;
+            this.btnCompareOCR.Text = "Compare OCR";
+            this.btnCompareOCR.UseVisualStyleBackColor = false;
+            this.btnCompareOCR.Click += new System.EventHandler(this.btnCompareOCR_Click);
+            // 
             // txtPreviewResult
             // 
-            this.txtPreviewResult.Location = new System.Drawing.Point(872, 59);
+            this.txtPreviewResult.Location = new System.Drawing.Point(858, 59);
             this.txtPreviewResult.Margin = new System.Windows.Forms.Padding(4);
             this.txtPreviewResult.Multiline = true;
             this.txtPreviewResult.Name = "txtPreviewResult";
             this.txtPreviewResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtPreviewResult.Size = new System.Drawing.Size(247, 389);
+            this.txtPreviewResult.Size = new System.Drawing.Size(261, 391);
             this.txtPreviewResult.TabIndex = 7;
-            // 
-            // btnSaveRecipePreview
-            // 
-            this.btnSaveRecipePreview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(89)))), ((int)(((byte)(133)))));
-            this.btnSaveRecipePreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSaveRecipePreview.ForeColor = System.Drawing.Color.White;
-            this.btnSaveRecipePreview.Location = new System.Drawing.Point(875, 531);
-            this.btnSaveRecipePreview.Margin = new System.Windows.Forms.Padding(4);
-            this.btnSaveRecipePreview.Name = "btnSaveRecipePreview";
-            this.btnSaveRecipePreview.Size = new System.Drawing.Size(229, 50);
-            this.btnSaveRecipePreview.TabIndex = 6;
-            this.btnSaveRecipePreview.Text = "Save Recipe";
-            this.btnSaveRecipePreview.UseVisualStyleBackColor = false;
-            this.btnSaveRecipePreview.Click += new System.EventHandler(this.btnSaveRecipePreview_Click);
             // 
             // btnStopPreview
             // 
             this.btnStopPreview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(89)))), ((int)(((byte)(133)))));
             this.btnStopPreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStopPreview.ForeColor = System.Drawing.Color.White;
-            this.btnStopPreview.Location = new System.Drawing.Point(875, 457);
+            this.btnStopPreview.Location = new System.Drawing.Point(858, 536);
             this.btnStopPreview.Margin = new System.Windows.Forms.Padding(4);
             this.btnStopPreview.Name = "btnStopPreview";
-            this.btnStopPreview.Size = new System.Drawing.Size(229, 49);
+            this.btnStopPreview.Size = new System.Drawing.Size(261, 49);
             this.btnStopPreview.TabIndex = 5;
             this.btnStopPreview.Text = "Stop Preview";
             this.btnStopPreview.UseVisualStyleBackColor = false;
@@ -1052,11 +1052,13 @@ namespace LetsTextify
             // 
             // pbPreviewImage
             // 
+            this.pbPreviewImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pbPreviewImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pbPreviewImage.Location = new System.Drawing.Point(38, 59);
             this.pbPreviewImage.Margin = new System.Windows.Forms.Padding(4);
             this.pbPreviewImage.Name = "pbPreviewImage";
-            this.pbPreviewImage.Size = new System.Drawing.Size(811, 522);
-            this.pbPreviewImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbPreviewImage.Size = new System.Drawing.Size(794, 527);
+            this.pbPreviewImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbPreviewImage.TabIndex = 4;
             this.pbPreviewImage.TabStop = false;
             // 
@@ -1066,13 +1068,13 @@ namespace LetsTextify
             // 
             // pnlCompareOCR
             // 
+            this.pnlCompareOCR.Controls.Add(this.OriginalPicture);
+            this.pnlCompareOCR.Controls.Add(this.PreProcessedImage);
             this.pnlCompareOCR.Controls.Add(this.closeCompareOCR);
             this.pnlCompareOCR.Controls.Add(this.PreprocessedImgText);
             this.pnlCompareOCR.Controls.Add(this.OriginalImgText);
             this.pnlCompareOCR.Controls.Add(this.PreprocessedImg);
             this.pnlCompareOCR.Controls.Add(this.OriginalImage);
-            this.pnlCompareOCR.Controls.Add(this.PreProcessedImage);
-            this.pnlCompareOCR.Controls.Add(this.OriginalPicture);
             this.pnlCompareOCR.Location = new System.Drawing.Point(0, 0);
             this.pnlCompareOCR.Name = "pnlCompareOCR";
             this.pnlCompareOCR.Size = new System.Drawing.Size(1157, 640);
@@ -1167,10 +1169,10 @@ namespace LetsTextify
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1157, 640);
-            this.Controls.Add(this.pnlCompareOCR);
-            this.Controls.Add(this.pnlRecipe);
-            this.Controls.Add(this.pnlTeaching);
             this.Controls.Add(this.pnlPreview);
+            this.Controls.Add(this.pnlTeaching);
+            this.Controls.Add(this.pnlRecipe);
+            this.Controls.Add(this.pnlCompareOCR);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
@@ -1189,7 +1191,6 @@ namespace LetsTextify
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.pnlRecipe.ResumeLayout(false);
-            this.pnlRecipe.PerformLayout();
             this.pnlRecipeNamePopUp.ResumeLayout(false);
             this.pnlRecipeNamePopUp.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecipeList)).EndInit();
@@ -1207,7 +1208,6 @@ namespace LetsTextify
         #endregion
 
         private Panel pnlTeaching;
-        private Button btnCompareOCR;
         private Button btnZoomPlus;
         private Button btnZoomMinus;
         private TrackBar trkZoomLevel;
@@ -1257,12 +1257,10 @@ namespace LetsTextify
         private Panel pnlRecipe;
         private Panel pnlPreview;
         private DataGridView dgvRecipeList;
-        private Label Recipe;
         private Button Delete;
         private Button Edit;
         private Button Create;
         private TextBox txtPreviewResult;
-        private Button btnSaveRecipePreview;
         private Button btnStopPreview;
         private PictureBox pbPreviewImage;
         private Timer timer1;
@@ -1282,5 +1280,8 @@ namespace LetsTextify
         private DataGridViewTextBoxColumn dgvRecipeListSrNo;
         private DataGridViewTextBoxColumn dgvRecipeListRecipeName;
         private DataGridViewTextBoxColumn dgvRecipeListLastModifiedOn;
+        private Button btnCompareOCR;
+        private TextBox txtPostProcessPreview;
+        private CheckBox IsSavePostProcessedData;
     }
 }
